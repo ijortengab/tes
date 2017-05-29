@@ -1,0 +1,19 @@
+{
+    "name": "ragnarok.id/penipu",
+    "type": "project",
+    "license": "MIT",    
+    "authors": [
+        {
+            "name": "Pedagang Amanah",
+            "email": "pedagang.amanah2016@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/yaml": "^3.2",
+        "symfony/finder": "^3.2",
+        "symfony/serializer": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {"PedagangAmanah\\": "src/"}
+    }    
+}
