@@ -27,7 +27,7 @@ foreach ($finder as $file) {
 }
 
 // Save File of Table Nick.
-$file = new FileJavascript('output/nick-data-set.js', 'nickDataSet', StorageByNick::$storage);
+$file = new FileJavascript('docs/nick-data-set.js', 'nickDataSet', StorageByNick::$storage);
 $file->save();
 $columns = StorageByNick::getColumns();
 $data = [];
@@ -35,12 +35,12 @@ foreach ($columns as $column) {
     $_data = ['title' => $column];
     $data[] = $_data;
 }
-$file = new FileJavascript('output/nick-info-columns.js', 'nickInfoColumns', $data);
+$file = new FileJavascript('docs/nick-info-columns.js', 'nickInfoColumns', $data);
 $file->save();
 
 
 // Save File of Table Bank.
-$file = new FileJavascript('output/bank-data-set.js', 'bankDataSet', StorageByBank::$storage);
+$file = new FileJavascript('docs/bank-data-set.js', 'bankDataSet', StorageByBank::$storage);
 $file->save();
 $columns = StorageByBank::getColumns();
 $data = [];
@@ -48,7 +48,7 @@ foreach ($columns as $column) {
     $_data = ['title' => $column];
     $data[] = $_data;
 }
-$file = new FileJavascript('output/bank-info-columns.js', 'bankInfoColumns', $data);
+$file = new FileJavascript('docs/bank-info-columns.js', 'bankInfoColumns', $data);
 $file->save();
 
 

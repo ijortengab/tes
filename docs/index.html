@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Penipu di Ragnarok</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="">
+                        <h1 class="brand-heading">Nama Character</h1>
+                        <p class="intro-text">Table Nama Character yang <strong>dilaporkan</strong> melakukan penipuan di dalam game Ragnarok.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <br/>
+    <br/>
+    <section id="about" class="container content-section">
+        <div class="row">
+            <table id="byNick" class="table table-striped" cellspacing="0" width="100%"></table>
+        </div>
+    </section>
+    <br/>
+    <br/>
+    <hr/>
+
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="">
+                        <h1 class="brand-heading">Nomor Rekening</h1>
+                        <p class="intro-text">Table nomor rekening yang <strike>penipu</strike> sebaiknya Anda hati-hati bertransaksi dengan ybs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <br/>
+    <br/>
+
+    <section id="about" class="container content-section">
+        <div class="row">
+            <table id="byBank" class="table table-striped" cellspacing="0" width="100%"></table>
+        </div>
+    </section>
+    <br/>
+    <br/>
+    <hr/>
+
+
+<table id="example" class="display" cellspacing="0" width="100%">
+
+</table>
+
+<footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="copyright text-muted small">Contact Person: <a target="_blank" href="https://www.facebook.com/profile.php?id=100012449443911">Pedagang Amanah</a> - &copy; 2017</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="nick-data-set.js"></script>
+    <script type="text/javascript" src="nick-info-columns.js"></script>
+    <script type="text/javascript" src="bank-data-set.js"></script>
+    <script type="text/javascript" src="bank-info-columns.js"></script>
+    <script type="text/javascript">
+        $('#byNick').DataTable( {
+            data: nickDataSet,
+            columns: nickInfoColumns,
+            paging: false,
+        });
+        $('#byBank').DataTable( {
+            data: bankDataSet,
+            columns: bankInfoColumns,
+            paging: false,
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>
