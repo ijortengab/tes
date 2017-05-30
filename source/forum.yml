@@ -8,3 +8,65 @@
     name: BNI    
     user_account: "0313791940"
     user_name: M Ramadhana
+    
+- reporter: RyuSeiba
+  desc: Penjual tidak memberikan ID Character setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=38298&viewfull=1#post38298
+  nick: Excecutive 
+  server: Chaos
+  bank:
+    name: BNI    
+    user_account: "1992060803"
+    user_name: Rahmat Kurniawan
+    
+- reporter: Weli24 
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=38382&viewfull=1#post38382
+  nick: 
+  server: 
+  bank:
+    name: CIMB
+    user_account: "0703480218000"
+    user_name: Ruben Christy    
+
+- reporter: Nujabes
+  desc: Meminjam barang dan tidak dikembalikan.
+  link: https://forum.gravindo.id/showthread.php?1841-Penipuan-mengatas-namakan-kerabat-dekat
+  nick: Strongerz
+  server: Chaos
+  bank:
+    name:     
+    user_account: ""
+    user_name: 
+        
+
+- reporter: olist99
+  desc: Pembeli menggunakan rekber palsu untuk menipu penjual.
+  link: https://forum.gravindo.id/showthread.php?1970-Penipuan-penjualan-barang-dengan-rekber-DPR
+  nick: Caesars`Palace
+  server: Chaos
+  bank:
+    name:     
+    user_account: ""
+    user_name: 
+    
+- reporter: rhezadizora
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2018-Sekedar-mengingatkan-dan-memohon-untuk-di-ban-Char-Crystalmayden
+  nick: Crystalmayden
+  server: Chaos
+  bank:
+    name:     
+    user_account: ""
+    user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name:     
+    # user_account: ""
+    # user_name: 
+    
