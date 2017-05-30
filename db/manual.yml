@@ -64,8 +64,29 @@
   link: https://www.facebook.com/groups/1309808729047109/permalink/1489759411052039/?comment_id=1490125731015407&comment_tracking=%7B%22tn%22%3A%22R1%22%7D
   bank:
     name: BCA
-    user_account: 0510809670
+    user_account: "0510809670"
     user_name: Yuliana
+- reporter: Aldi Kurniawan
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://www.facebook.com/groups/ForumRagnarokIDGravindo/permalink/799255173574047/
+  bank:
+    name: BRI 
+    user_account: "069601005939534"
+    user_name: Amos Febri
+- reporter: Aldi Kurniawan
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://www.facebook.com/groups/ForumRagnarokIDGravindo/permalink/799255173574047/
+  bank:
+    name: BNI 
+    user_account: "0470963408"
+    user_name: Fevti Sari Andani
+- reporter: Aldi Kurniawan
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://www.facebook.com/groups/ForumRagnarokIDGravindo/permalink/799255173574047/
+  bank:
+    name: BNI
+    user_account: "0380530045"
+    user_name: Erna Wariyanti
 
 
   
