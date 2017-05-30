@@ -60,6 +60,95 @@
     user_account: ""
     user_name: 
     
+- reporter: Lectival 
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?1936-PENIPUAN-Zeny-Seller-yang-wajib-di-BlackList
+  nick: VidciLia
+  server: Chaos
+  bank:
+    name: BCA
+    user_account: "4601703126"
+    user_name: Asif
+    
+- reporter: Lectival 
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?1936-PENIPUAN-Zeny-Seller-yang-wajib-di-BlackList
+  nick: shutters
+  server: Chaos
+  bank:
+    name: BNI
+    user_account: "0400827729"
+    user_name: Feber Slamat Simanjuntak
+    
+- reporter: skyler91
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?1085-Penipuan-Transaksi-Zenny-ID-penipu-Thivft
+  nick: Thivft 
+  server: Chaos
+  bank:
+    name:     
+    user_account: ""
+    user_name: 
+    
+
+- reporter: toddch
+  desc: Pembeli menggunakan rekber palsu untuk menipu penjual.
+  link: https://forum.gravindo.id/showthread.php?1809-Mengingatkan-orang-lain-jangan-percaya-sama-nick-Alphonz-cekidot
+  nick: Alphonz
+  server: Chaos
+  bank:
+    name:     
+    user_account: ""
+    user_name: 
+
+- reporter: mazvi92
+  desc: Sok Kenal Sok Dekat. Meminjam barang dan tidak dikembalikan.
+  link: https://forum.gravindo.id/showthread.php?975-WASPADA-Upaya-Penipuan-dalam-Game
+  nick: Strongerz
+  server: Chaos
+  bank:
+    name:     
+    user_account: ""
+    user_name:     
+
+- reporter: Varkiel
+  desc: Sok Kenal Sok Dekat. Meminjam barang dan tidak dikembalikan.
+  link: https://forum.gravindo.id/showthread.php?975-WASPADA-Upaya-Penipuan-dalam-Game&p=24799&viewfull=1#post24799
+  nick: Leon*
+  server: Chaos
+
+- reporter: Aerocrozz
+  desc: Sok Kenal Sok Dekat. Meminjam barang dan tidak dikembalikan.
+  link: https://forum.gravindo.id/showthread.php?975-WASPADA-Upaya-Penipuan-dalam-Game&p=25335&viewfull=1#post25335
+  nick: Leon*
+  server: Chaos
+    
+- reporter: Weli24 
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?686-Penipuan-atas-nama-Ruben-Christy
+  nick: 
+  server: Chaos
+  bank:
+    name: CIMB    
+    user_account: "0703480218000"
+    user_name: Ruben Christy
+    
+- reporter: worldspecies
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2162-Penipuan-Jual-Zeny-Nick-SiZiTu-(-Hunter-)-Merchant-(-PenjualKeliling-
+  nick: SiZiTu
+  server: Chaos
+  bank:
+    name: BCA
+    user_account: "6665105435"
+    user_name: Herry Chandra
+    
+- reporter: worldspecies
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2162-Penipuan-Jual-Zeny-Nick-SiZiTu-(-Hunter-)-Merchant-(-PenjualKeliling-
+  nick: PenjualKeliling
+  server: Chaos
+    
 # - reporter: 
   # desc: 
   # link: 
