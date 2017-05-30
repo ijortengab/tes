@@ -1,8 +1,10 @@
 # Informasi penipu berdasarkan thread di Forum Gravindo https://forum.gravindo.id
 - reporter: katrinn
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
   link: https://forum.gravindo.id/showthread.php?6738-Penipuan-jual-zeny-murahhh-atas-nama-M-Ramadhana
   nick: IchiroTenma
+  server: Chaos
   bank:
     name: BNI    
-    user_account: 0313791940
+    user_account: "0313791940"
     user_name: M Ramadhana
