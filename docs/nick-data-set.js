@@ -1,5 +1,6 @@
 var nickDataSet = [
     ["Copz","Asgard","Penjual tidak memberikan kode voucher setelah pembeli mentransfer zeny.","Ahmad Fachrurozi","","Ahmad Fachrurozi"],
     ["Katie`Holmes","Chaos","Rekber Palsu.","<a target=\"_blank\" href=\"https:\/\/www.facebook.com\/groups\/ForumRagnarokIDGravindo\/permalink\/833594780140086\/?match=cGVuaXB1\">Deday Gumiho<\/a>","https:\/\/www.facebook.com\/groups\/ForumRagnarokIDGravindo\/permalink\/833594780140086\/?match=cGVuaXB1","Deday Gumiho"],
-    ["Light~","Chaos","Penjual tidak memberikan item setelah pembeli mentransfer rupiah.","<a target=\"_blank\" href=\"https:\/\/www.facebook.com\/groups\/ForumRagnarokIDGravindo\/permalink\/829620753870822\/?match=cGVuaXB1\">Tjhie Timothy Ivan<\/a>","https:\/\/www.facebook.com\/groups\/ForumRagnarokIDGravindo\/permalink\/829620753870822\/?match=cGVuaXB1","Tjhie Timothy Ivan"]
+    ["Light~","Chaos","Penjual tidak memberikan item setelah pembeli mentransfer rupiah.","<a target=\"_blank\" href=\"https:\/\/www.facebook.com\/groups\/ForumRagnarokIDGravindo\/permalink\/829620753870822\/?match=cGVuaXB1\">Tjhie Timothy Ivan<\/a>","https:\/\/www.facebook.com\/groups\/ForumRagnarokIDGravindo\/permalink\/829620753870822\/?match=cGVuaXB1","Tjhie Timothy Ivan"],
+    ["IchiroTenma","","","<a target=\"_blank\" href=\"https:\/\/forum.gravindo.id\/showthread.php?6738-Penipuan-jual-zeny-murahhh-atas-nama-M-Ramadhana\">katrinn<\/a>","https:\/\/forum.gravindo.id\/showthread.php?6738-Penipuan-jual-zeny-murahhh-atas-nama-M-Ramadhana","katrinn"]
 ]
