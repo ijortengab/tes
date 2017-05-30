@@ -14,10 +14,10 @@
     <!-- DataTables CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.15/css/dataTables.bootstrap.css" rel="stylesheet">
     <!-- DataTables Responsive CSS -->
-    <link href="../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/v/dt/r-2.1.1/datatables.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="sb-admin-2.css" rel="stylesheet">
-    <!-- Custom Fonts -->    
+    <!-- Custom Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -40,6 +40,14 @@
                 <a class="navbar-brand" href="index.html">Ragnarok dot ID</a>
             </div>
             <!-- /.navbar-header -->
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="https://github.com/ragnarok-id/penipu">
+                        <i class="fa fa-github fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                </li>
+            </ul>
+
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
@@ -58,7 +66,7 @@
                             <a class="toggleRow" data-target="#rowNick" href="#rowNick"><i class="fa fa-user fa-fw"></i> Nama Karakter</a>
                         </li>
                         <li>
-                            <a class="toggleRow" data-target="#rowBank" href="#rowBank"><i class="fa fa-bank fa-fw"></i> Nomor Rekening</span></a>                            
+                            <a class="toggleRow" data-target="#rowBank" href="#rowBank"><i class="fa fa-bank fa-fw"></i> Nomor Rekening</span></a>
                         </li>
                     </ul>
                 </div>
@@ -84,7 +92,7 @@
                         <div class="panel-body">
                             <table width="100%" class="table table-striped table-bordered table-hover" id="byNick">
                             </table>
-                            <!-- /.table-responsive -->                            
+                            <!-- /.table-responsive -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -103,7 +111,7 @@
                         <div class="panel-body" >
                             <table width="100%" class="table table-striped table-bordered table-hover" id="byBank">
                             </table>
-                            <!-- /.table-responsive -->                            
+                            <!-- /.table-responsive -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -135,7 +143,7 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
-    });    
+    });
     </script>
     <script type="text/javascript" src="nick-data-set.js"></script>
     <script type="text/javascript" src="nick-info-columns.js"></script>
@@ -155,7 +163,7 @@
             //paging: false,
         });
     </script>
-    <script>        
+    <script>
         $('.toggleRow').click(function (e) {
             var target = $(this).data('target');
             // console.log(target);

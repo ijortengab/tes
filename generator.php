@@ -10,7 +10,7 @@ use PedagangAmanah\FileJavascript;
 require __DIR__ . '/vendor/autoload.php';
 
 $finder = new Finder();
-$finder->files()->in(__DIR__ . '/source')->name('*.yml');
+$finder->files()->in(__DIR__ . '/db')->name('*.yml');
 
 // Populate Arrays.
 foreach ($finder as $file) {
