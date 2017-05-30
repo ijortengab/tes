@@ -150,7 +150,7 @@
   server: Chaos
     
 - reporter: Devina
-  desc: 
+  desc: Pembeli menggunakan rekber palsu untuk menipu penjual.
   link: https://forum.gravindo.id/showthread.php?1101-PERHATIAN-CHAR-HUNTER-99-NICK-quot-Pina-quot-PENIPU!-HATI-HATI
   nick: 
   server: Chaos
@@ -165,13 +165,143 @@
   nick: Typertees~
   server: Chaos
     
+- reporter: chocolairs
+  desc: 
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=81766&viewfull=1#post81766
+  nick: "*Na$h*"
+  server: Chaos
+  bank:
+    name: BNI
+    user_account: "0313791940"
+    user_name: M. Ramadhana
+    
+- reporter: 
+  desc: 
+  link: 
+  nick: RoyalEmper0r
+  server: 
+  bank:
+    name: 
+    user_account: ""
+    user_name: 
+    
 # - reporter: 
   # desc: 
   # link: 
   # nick: 
   # server: 
   # bank:
-    # name:     
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
+    # user_account: ""
+    # user_name: 
+    
+# - reporter: 
+  # desc: 
+  # link: 
+  # nick: 
+  # server: 
+  # bank:
+    # name: 
     # user_account: ""
     # user_name: 
     
