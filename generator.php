@@ -24,7 +24,9 @@ foreach ($finder as $file) {
         StorageByBank::save($array);        
     } catch (ParseException $e) {
         $message = $e->getMessage();
-        Log::write('Error at file '.$file->getRealPath().'. Message: '. $message);
+        $message = 'Error at file '.$file->getRealPath().'. Message: '. $message;
+        $file = 'error.log';
+        Log::write($message, $file);
         continue;
     }
 }
