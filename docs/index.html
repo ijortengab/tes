@@ -182,6 +182,17 @@
             // console.log(target);
             $('.rowData').hide();
             $(target).show();
+            var $target = $(target);
+            var width = $target.outerWidth(true);
+            var height = $target.outerHeight(true);
+            $('<div></div>').css({
+                'width':width, 'height':height, 'background-color':'white','position':'absolute', 'margin-top': -1 * height}
+            ).insertAfter($target).animate({
+                'margin-top':0,
+                'height':0
+            },1000,function () {
+                $(this).remove();
+            });
             e.preventDefault();
         });
     </script>
