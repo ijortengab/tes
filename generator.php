@@ -6,6 +6,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use PedagangAmanah\StorageByNick;
 use PedagangAmanah\StorageByBank;
 use PedagangAmanah\FileJavascript;
+use PedagangAmanah\Log;
     
 require __DIR__ . '/vendor/autoload.php';
 
@@ -22,6 +23,8 @@ foreach ($finder as $file) {
         StorageByNick::save($array);
         StorageByBank::save($array);        
     } catch (ParseException $e) {
+        $message = $e->getMessage();
+        Log::write('Error at file '.$file->getRealPath().'. Message: '. $message);
         continue;
     }
 }
