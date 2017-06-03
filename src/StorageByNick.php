@@ -8,7 +8,7 @@ class StorageByNick
 
     protected static $columns = [
         'nick' => 'Nama Character',
-        'server' => 'Server',     
+        'server' => 'Server',
         'desc' => 'Modus',
         'source' => 'Sumber',
     ];
@@ -47,6 +47,14 @@ class StorageByNick
             $array['link'] = isset($each['link']) ? (string) $each['link'] : '';
             $array['reporter'] = isset($each['reporter']) ? (string) $each['reporter'] : '';
             $array['source'] = empty($array['link']) ? $array['reporter'] : '<a target="_blank" href="'.$array['link'].'">'.$array['reporter'].'</a>';
+            $screenshot = array_key_exists('screenshot', $each) ? (array) $each['screenshot'] : [];
+            $screenshots = array_key_exists('screenshots', $each) ? (array) $each['screenshots'] : [];
+            $screenshots = array_merge($screenshots, $screenshot);            
+            if (!empty($screenshots)) {
+                while ($screenshot = array_shift($screenshots)) {
+                    $array['source'] .= ' <a target="_blank" href="'.$screenshot.'"><i class="fa fa-camera fa-fw"></i></a>';
+                }
+            }
             // Rapihkan.
             self::$storage[] = array_values(array_merge(array_flip(array_keys(self::$columns)), $array));
         }

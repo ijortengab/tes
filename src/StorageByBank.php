@@ -1,5 +1,5 @@
 <?php
-    
+
 namespace PedagangAmanah;
 
 class StorageByBank
@@ -8,7 +8,7 @@ class StorageByBank
 
     protected static $columns = [
         'user_account' => 'Nomor Rekening (Bank)',
-        'user_name' => 'Atas Nama',        
+        'user_name' => 'Atas Nama',
         'desc' => 'Modus',
         'source' => 'Sumber',
     ];
@@ -43,7 +43,7 @@ class StorageByBank
         if (
             isset($each['bank']['name']) &&
             isset($each['bank']['user_account']) &&
-            isset($each['bank']['user_name'])            
+            isset($each['bank']['user_name'])
         ) {
             $array['bank_user_name'] = (string) $each['bank']['user_name'];
             $array['bank_user_account'] = (string) $each['bank']['user_account'];
@@ -54,6 +54,14 @@ class StorageByBank
             $array['user_account'] = $array['bank_user_account'] . ' (' . $array['bank_name'] . ')';
             $array['user_name'] = $array['bank_user_name'];
             $array['source'] = empty($array['link']) ? $array['reporter'] : '<a target="_blank" href="'.$array['link'].'">'.$array['reporter'].'</a>';
+            $screenshot = array_key_exists('screenshot', $each) ? (array) $each['screenshot'] : [];
+            $screenshots = array_key_exists('screenshots', $each) ? (array) $each['screenshots'] : [];
+            $screenshots = array_merge($screenshots, $screenshot);            
+            if (!empty($screenshots)) {
+                while ($screenshot = array_shift($screenshots)) {
+                    $array['source'] .= ' <a target="_blank" href="'.$screenshot.'"><i class="fa fa-camera fa-fw"></i></a>';
+                }
+            }
             // Rapihkan.
             self::$storage[] = array_values(array_merge(array_flip(array_keys(self::$columns)), $array));
         }
