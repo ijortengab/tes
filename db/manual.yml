@@ -3,7 +3,7 @@
   server: Asgard
   reporter: Ahmad Fachrurozi
   desc: "Penjual tidak memberikan kode voucher setelah pembeli mentransfer zeny."
-  link: 
+  link:
 - nick: Katie`Holmes
   server: Chaos
   reporter: Deday Gumiho
@@ -70,14 +70,14 @@
   desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
   link: https://www.facebook.com/groups/ForumRagnarokIDGravindo/permalink/799255173574047/
   bank:
-    name: BRI 
+    name: BRI
     user_account: "069601005939534"
     user_name: Amos Febri
 - reporter: Aldi Kurniawan
   desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
   link: https://www.facebook.com/groups/ForumRagnarokIDGravindo/permalink/799255173574047/
   bank:
-    name: BNI 
+    name: BNI
     user_account: "0470963408"
     user_name: Fevti Sari Andani
 - reporter: Aldi Kurniawan
@@ -87,6 +87,3 @@
     name: BNI
     user_account: "0380530045"
     user_name: Erna Wariyanti
-
-
-  
