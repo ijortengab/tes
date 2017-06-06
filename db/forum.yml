@@ -582,3 +582,93 @@
   link: https://forum.gravindo.id/showthread.php?4946-laporan-PENIPU-nick-Syno
   nick: Syno`
   server: Chaos
+- reporter: alundra
+  desc: Pembeli tidak mentransfer rupiah setelah penjual memberikan ID Character.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=82845&viewfull=1#post82845
+  nick: RajaDugem
+  server: Chaos
+- reporter: alundra
+  desc: Karakter ini jatuh ke tangan penipu.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=82845&viewfull=1#post82845
+  nick: jevewiz
+  server: Chaos
+- reporter: alundra
+  desc: Karakter ini jatuh ke tangan penipu.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=82845&viewfull=1#post82845
+  nick: "jeve's"
+  server: Chaos
+- reporter: alundra
+  desc: Karakter ini jatuh ke tangan penipu.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=82845&viewfull=1#post82845
+  nick: BluesArmy
+  server: Chaos
+- reporter: alundra
+  desc: Karakter ini jatuh ke tangan penipu.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=82845&viewfull=1#post82845
+  nick: masteraxe
+  server: Chaos
+- reporter: antipenipu
+  desc: Joki tidak dapat dipercaya.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=83375&viewfull=1#post83375
+  bank:
+    name: BCA
+    user_account: "7630365192"
+    user_name: Effendy
+- reporter: Jerkhajick
+  desc: Joki tidak dapat dipercaya.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=84011&viewfull=1#post84011
+  bank:
+    name: BCA
+    user_account: "7630365192"
+    user_name: Effendy
+# uncomplete
+- reporter: blackcountry
+  desc:
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=83796&viewfull=1#post83796
+  nick: turnbackcrime
+  bank:
+    name: BCA
+    user_account: ""
+    user_name: Muchamad Triyono
+- reporter: argamitol
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=84154&viewfull=1#post84154
+  nick: "Diasikin`Aja"
+  server: Chaos
+  bank:
+    name: BNI
+    user_account: "506507391"
+    user_name: Farah Rachel Sofyan
+# Uncomplete
+- reporter: dozkidoz
+  desc:
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=84187&viewfull=1#post84187
+  nick: BornTobeCool
+  server: Loki
+  bank:
+    name: BRI
+    user_account: "069601005939534"
+    user_name: Amos Febri Marbun
+- reporter: Goyard
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=84288&viewfull=1#post84288
+  nick: Pengembara
+  server: Chaos
+  bank:
+    name: Mandiri
+    user_account: "9000038239100"
+    user_name: Arif Safri
+- reporter: Medicals
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=84441&viewfull=1#post84441
+  bank:
+    name: BNI
+    user_account: "0527017143"
+    user_name: Nelson Sitohang
+- reporter: Medicals
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=84441&viewfull=1#post84441
+  bank:
+    name: BCA
+    user_account: "4260134341"
+    user_name: Muchamad Triyono
