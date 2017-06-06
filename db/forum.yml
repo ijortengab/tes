@@ -64,6 +64,13 @@
     user_name: Asif
 - reporter: Lectival
   desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
+  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=40414&viewfull=1#post40414
+  bank:
+    name: BCA
+    user_account: "8800683425"
+    user_name: Eza Yuniar
+- reporter: Lectival
+  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
   link: https://forum.gravindo.id/showthread.php?1936-PENIPUAN-Zeny-Seller-yang-wajib-di-BlackList
   nick: shutters
   server: Chaos
@@ -71,11 +78,6 @@
     name: BNI
     user_account: "0400827729"
     user_name: Feber Slamat Simanjuntak
-- reporter: Lectival
-  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
-  link: https://forum.gravindo.id/showthread.php?1936-PENIPUAN-Zeny-Seller-yang-wajib-di-BlackList
-  nick: VidciLia
-  server: Chaos
 - reporter: skyler91
   desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
   link: https://forum.gravindo.id/showthread.php?1085-Penipuan-Transaksi-Zenny-ID-penipu-Thivft
@@ -443,15 +445,6 @@
   link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=40477&viewfull=1#post40477
   nick: RamboKeei
   server: Chaos
-- reporter: Lectival
-  desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
-  link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=40414&viewfull=1#post40414
-  nick: VidciLia
-  server: Chaos
-  bank:
-    name: BCA
-    user_account: "8800683425"
-    user_name: Eza Yuniar
 - reporter: owningz
   desc: Penjual tidak memberikan zeny setelah pembeli mentransfer rupiah.
   link: https://forum.gravindo.id/showthread.php?2047-Penipuan-Sharing-List-Penipu&p=40289&viewfull=1#post40289
