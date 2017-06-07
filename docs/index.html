@@ -155,7 +155,7 @@
         });
     });
     </script>
-    <!-- Local -->    
+    <!-- Local -->
     <script type="text/javascript" src="local.js"></script>
     <!-- Per Page -->
     <script type="text/javascript" src="nick-data-set.js"></script>
@@ -167,6 +167,9 @@
             data: nickDataSet,
             columns: nickInfoColumns,
             ordering: false,
+            "initComplete": function(settings, json) {
+                $('#byNick_filter input').focus();
+            }
             //paging: false,
         });
         $('#byBank').DataTable( {
@@ -182,6 +185,7 @@
             // console.log(target);
             $('.rowData').hide();
             $(target).show();
+            $(target+' .dataTables_filter input').focus();
             var $target = $(target);
             var width = $target.outerWidth(true);
             var height = $target.outerHeight(true);
