@@ -1,0 +1,979 @@
+<?php
+
+define('UI_LDAP_HOST','152.118.39.37');
+define('UI_LDAP_BASEDN','o=Universitas Indonesia, c=ID');
+define('UI_SERVICES_URL','https://services.ui.ac.id/ws/middleware/'); // with trailing slash
+
+    
+define('CUSTOM_LIMIT_REGISTRATION', 1);
+define('CUSTOM_LIMIT_UPLOAD', 1);
+define('CUSTOM_STATE_UNCOMPLETE', 2);
+define('CUSTOM_STATE_ACCEPTED', 4);
+define('CUSTOM_STATE_NEED_REVISION', 5);
+define('CUSTOM_STATE_WAITING_VERIFICATION', 3);
+define('CUSTOM_ROLE_ADMIN', 176168899);
+
+function custom_infographics_page_callback() {
+    $path = variable_get('file_public_path');
+    return theme('infographics', [
+        'infografis_001' => url($path . '/infografis/infografis_001.jpg'),
+        'infografis_002' => url($path . '/infografis/infografis_002.jpg'),
+        'infografis_003' => url($path . '/infografis/infografis_003.jpg'),
+    ]);
+}
+
+function custom_menu() {
+    return [
+        'login' => [
+            'title' => 'Log in',
+            'page callback' => 'custom_login_page_callback',
+            'menu_name' => 'user-menu',
+            'access callback' => 'user_is_anonymous',
+        ],
+        'infographics' => [
+            'title' => 'Infographics',
+            'page callback' => 'custom_infographics_page_callback',
+            'menu_name' => 'main-menu',
+            'access callback' => true,
+            'weight' => -48,
+            'options' => [
+                'sbadmin2_icon' => 'picture-o',
+            ],
+        ],
+        'create-account' => [
+            'title' => 'Create new account',
+            'page callback' => 'custom_create_account_page_callback',
+            'menu_name' => 'user-menu',
+            'access callback' => 'user_is_anonymous',
+        ],
+        'registration' => [
+            'title' => 'Registration',
+            'page callback' => 'custom_page_registration_callback',
+            'menu_name' => 'user-menu',
+            'access callback' => 'user_is_logged_in',
+            // 'type' => MENU_CALLBACK,
+            'weight' => -20,
+        ],
+        'registration/commit' => [
+            'title' => 'Confirmation',
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('custom_page_registration_commit_callback'),
+            'type' => MENU_CALLBACK,
+            'access callback' => 'custom_access_registration_commit_callback',
+        ],
+        'article' => [
+            'title' => 'Article',
+            'access arguments' => ['edit any article content'],
+            'page callback' => 'custom_page_article_callback',
+            'file' => 'custom.page.inc',
+            'options' => [
+                'sbadmin2_icon' => 'newspaper-o',
+            ],
+            'menu_name' => 'main-menu',
+            'expanded' => true,
+        ],
+        'article/table' => [
+            'title' => 'Data',
+            'type' => MENU_DEFAULT_LOCAL_TASK,
+            'weight' => -20,
+            'options' => [
+                'sbadmin2_icon' => 'table',
+            ],
+        ],
+        'article/form' => [
+            'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+            'access arguments' => ['create article content'],
+            'title' => 'New Article',
+            'page callback' => 'node_add',
+            'page arguments' => ['article'],
+            'file' => 'node.pages.inc',
+            'file path' => drupal_get_path('module', 'node'),
+            'options' => [
+                'sbadmin2_icon' => 'pencil-square-o',
+            ],
+        ],
+        '20besar' => [
+            'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+            'title' => '21 Bakal Calon Rektor Terjaring Universitas Indonesia',
+            'access callback' => true,
+            'page callback' => 'custom_20besar',
+            'options' => [
+                // 'sbadmin2_icon' => 'pencil-square-o',
+            ],
+        ],
+    ];
+}
+
+function custom_20besar() {
+    return theme('20besar');
+}
+
+function custom_theme() {
+    return [
+        'infographics' => [
+            'render element' => 'element',
+            'template' => 'templates/infographics',
+        ],
+        '20besar' => [
+            'render element' => 'element',
+            'template' => 'templates/20besar',
+        ],
+        'upload_node_form' => [
+            'render element' => 'form',
+            'template' => 'templates/upload-node-form',
+        ],
+        'registration_node_form' => [
+            'render element' => 'form',
+            'template' => 'templates/registration-node-form',
+        ],
+        'button_registration' => [
+            'variables' => [
+                'link' => null,
+            ],
+            'template' => 'templates/button-registration',
+            'file' => 'custom.theme.inc',
+        ],
+    ];
+}
+
+function custom_js_get_anu() {
+    return <<<'EOL'
+(function ($) {
+    Drupal.customPajakKeluaranFakturPajakTable = {
+        "columnDefs": [
+        {
+            "targets": -1,
+            "orderable": false,
+            "searchable": false,
+            "render": function ( data, type, row, meta ) {
+                return Drupal.theme('bootstrapLinks', Drupal.settings.bootstrapLinks, data);
+            }
+        }
+        ]
+    };
+})(jQuery);
+EOL;
+}
+
+/**
+ * Implements of hook_preprocess_HOOK().
+ * Preprocessor for theme `systemix_datatables_view`.
+ */
+function custom_preprocess_systemix_datatables_view(&$variables) {
+    switch ($variables['view']->name) {
+        case 'article':
+             $settings = [
+                'systemixDatatables' => [
+                    'views_dom_id:' . $variables['view']->dom_id => [
+                        'additionalOptions' => ['customPajakKeluaranFakturPajakTable'],
+                    ],
+                ],
+                'bootstrapLinks' => [
+                    'alignment' => 'right',
+                    'links' => [
+                        ['title' => 'View', 'href' =>  'node/[data]'],
+                        ['type' => 'toggle'],
+                        // ['type' => 'header', 'title' =>  'Last Edit: [date:y]'],
+                        ['title' => 'Edit', 'href' => 'node/[data]/edit'],
+                        // ['type' => 'header', 'title' => 'Total Revisions: 4'],
+                        ['title' => 'Revisions', 'href' => 'node/[data]/revisions'],
+                        ['type' => 'separator'],
+                        ['title' => 'Delete', 'href' =>  'node/[data]/delete']
+                    ],
+                ],
+            ];
+            drupal_add_library('sbadmin2_helper', 'sbadmin2.theme');
+            drupal_add_js($settings, array('type' => 'setting', 'scope' => JS_DEFAULT));
+            drupal_add_js(custom_js_get_anu(), array('type' => 'inline', 'scope' => JS_THEME, 'requires_jquery' => true));
+            // ctools_add_js('pajak-keluaran-faktur-pajak-table', 'custom'); inline
+            break;
+    }
+        
+}
+
+function custom_menu_alter(&$items) {
+    if (isset($items['sbadmin2-front'])) {
+        $items['sbadmin2-front']['page callback'] = 'custom_front_page_callback';
+    }
+    $items['user']['menu_name'] = 'main-menu';
+    $items['user']['options'] = [
+        'sbadmin2_icon' => 'user-o',
+    ];
+}
+
+/**
+ * Implements of hook_block_view_MODULE_DELTA_alter().
+ *
+ * Melakukan modifikasi theme_wrappers dari main menu.
+ */
+function custom_block_view_system_user_menu_alter(&$data, $block) {
+    // $debugname = 'data'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // Get mlid from menu link by module user
+    // that link to My 
+    $get = false;
+    foreach ($data['content'] as $mlid => $menu_info) {
+        if (isset($menu_info['#original_link']['module']) && $menu_info['#original_link']['module'] == 'system' &&
+        $menu_info['#original_link']['link_path'] == 'registration'
+        ) {
+            $get = $mlid;
+        }
+    }
+    if ($get !== false) {
+        return custom_block_change_registration_label($get, $data);
+    }
+    // $debugname = 'data'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+
+    // static $done = false;
+    // if ($done === false) {
+        // $done = true;
+        // ctools_include('menu', 'sbadmin2_helper');
+        // return _sbadmin2_helper_block_view_system_main_menu_alter($data);
+    // }
+}
+
+function custom_block_change_registration_label($mlid, &$data) {
+    if (!user_is_logged_in()) {
+        return;
+    }
+    if (!custom_is_user_registration_reached_limit()) {
+        return;
+    }
+    $nid = custom_get_nid_user_registration();
+    $node = node_load($nid);
+    if (isset($node->field_workflow[LANGUAGE_NONE][0]['value'])) {
+        $current_sid = $node->field_workflow[LANGUAGE_NONE][0]['value'];
+        $current_state = workflow_state_load_single($current_sid);
+        // $debugname = 'current_state'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+        if (isset($current_state->state)) {
+            $color = '';
+            switch ($current_state->state) {
+                case 'Incomplete':
+                    $color = 'red';
+                    break;
+            
+                case '':
+                    // Do something.
+                    break;
+            
+                default:
+                    // Do something.
+                    break;
+            }
+            $data['content'][$mlid]['#title'] = 'Registration <strong style="color:'.$color.';">'. $current_state->state .'</strong>';
+            $data['content'][$mlid]['#localized_options']['html'] = true;
+        }
+    }
+}
+
+/**
+ * Callback of /front.
+ */
+function custom_front_page_callback() {
+    global $user;
+    if ($user->uid) {
+        // menu_set_active_item('status/my');
+        // menu_set_active_item('news');
+        menu_set_active_item('20besar');
+    }
+    else {
+        // menu_set_active_item('news');
+        menu_set_active_item('20besar');
+    }
+    
+    return menu_execute_active_handler(NULL, FALSE);
+}
+
+function custom_maintenance_page_callback() {
+    return 'This page is Underconstruction.';
+}
+
+function custom_login_page_callback() {
+    menu_set_active_item('user');
+    return menu_execute_active_handler(NULL, FALSE);
+}
+
+function custom_create_account_page_callback() {
+    menu_set_active_item('user/register');
+    return menu_execute_active_handler(NULL, FALSE);
+}
+
+function custom_page_registration_callback() {
+    if (user_is_anonymous()) {
+        drupal_set_message('You must have an account then log in to system.');
+        drupal_goto('create-account');
+    }
+    if (custom_is_user_registration_reached_limit()) {
+        drupal_goto('status/my');
+    }
+    drupal_goto('node/add/registration', ['query' => ['destination' => 'status/my']]);
+}
+
+function custom_page_registration_commit_callback($form, &$form_state) {
+    return confirm_form($form,
+        t('Are you sure you want to submit to Committee?'),
+        'status/my',
+        t('After submit you can\'t edit your form and files anymore.'),
+        t('Submit'),
+        t('Back')
+    );
+}
+
+function custom_access_registration_commit_callback() {
+    $registration_must_in_uncomplete_state = false;
+    $nid = custom_get_nid_user_registration();
+    $node = node_load($nid);
+    if (isset($node->field_workflow[LANGUAGE_NONE][0]['value'])) {
+        $value = $node->field_workflow[LANGUAGE_NONE][0]['value'];
+        $registration_must_in_uncomplete_state = ($value == CUSTOM_STATE_UNCOMPLETE || $value == CUSTOM_STATE_NEED_REVISION);
+    }
+    // $labels = [];
+    // nganu($nid);
+    
+    $registration_nid = custom_get_nid_user_registration();
+    $registration_labels = nganu($registration_nid);
+   $upload_nid = custom_get_nid_user_upload();
+   $upload_labels = nganu($upload_nid);
+               
+    return (
+        $registration_must_in_uncomplete_state && 
+        custom_is_user_registration_reached_limit() && 
+        custom_is_user_upload_reached_limit() &&
+        empty($registration_labels) &&
+        empty($upload_labels)
+    );
+}
+
+function custom_page_registration_commit_callback_submit($form, &$form_state) {
+    global $user;
+    if ($form_state['values']['confirm']) {
+        drupal_set_message('Your Registration has been submitted to Committee.');
+        $nid = custom_get_nid_user_registration();
+        $entity_type = 'node';
+        $entity = node_load($nid);
+        $field_name = 'field_workflow';
+        $current_sid = CUSTOM_STATE_UNCOMPLETE;
+        if (isset($entity->field_workflow[LANGUAGE_NONE][0]['value'])) {
+            // MISALNYA NEED REVISIION.
+            $current_sid = $entity->field_workflow[LANGUAGE_NONE][0]['value'];
+        }
+        
+        $new_sid = CUSTOM_STATE_WAITING_VERIFICATION;
+        $comment = '';
+        $force = true;
+        $transition = new WorkflowTransition();
+        $transition->setValues($entity_type, $entity, $field_name, $current_sid, $new_sid, $user->uid, REQUEST_TIME, $comment);
+        $transition->force($force);
+        $new_sid = workflow_execute_transition($entity_type, $entity, $field_name, $transition, $force);
+    }
+    
+    $form_state['redirect'] = 'status/my';
+}
+
+function custom_is_user_registration_reached_limit($account = null) {
+    if ($account === null) {
+        $account = $GLOBALS['user'];
+    }
+    $uid = $account->uid;
+    $result = db_query('select nid from {node} where type = :type AND uid = :uid', [':type' => 'registration', ':uid' => $uid]);
+    return ($result->rowCount() >= CUSTOM_LIMIT_REGISTRATION);
+}
+
+function custom_is_user_upload_reached_limit($account = null) {
+    if ($account === null) {
+        $account = $GLOBALS['user'];
+    }
+    $uid = $account->uid;
+    $result = db_query('select nid from {node} where type = :type AND uid = :uid', [':type' => 'upload', ':uid' => $uid]);
+    return ($result->rowCount() >= CUSTOM_LIMIT_UPLOAD);
+}
+
+function custom_get_nid_user_upload($account = null) {
+    if ($account === null) {
+        $account = $GLOBALS['user'];
+    }
+    $uid = $account->uid;
+    $result = db_query('select nid from {node} where type = :type AND uid = :uid', [':type' => 'upload', ':uid' => $uid]);
+    $array = $result->fetchCol();
+    $nid = array_shift($array);
+    return $nid;
+}
+
+function custom_get_nid_user_registration($account = null) {
+    if ($account === null) {
+        $account = $GLOBALS['user'];
+    }
+    $uid = $account->uid;
+    $result = db_query('select nid from {node} where type = :type AND uid = :uid', [':type' => 'registration', ':uid' => $uid]);
+    $array = $result->fetchCol();
+    $nid = array_shift($array);
+    return $nid;
+}
+
+function custom_node_access($node, $op, $account) {
+    $type = is_string($node) ? $node : $node->type;
+    switch ($type) {
+        case 'registration':
+            switch ($op) {
+                case 'create':
+                    if (custom_is_user_registration_reached_limit($account)) {
+                        // Ini berlaku untuk form build dan form submit.
+                        return NODE_ACCESS_DENY;
+                    }
+                    break;
+                case 'view':
+                    $allow = false;
+                    if (isset($account->uid) && isset($node->uid) && $account->uid == $node->uid) {
+                        $allow = true;
+                    }
+                    if (user_has_role(CUSTOM_ROLE_ADMIN, $account)) {
+                        $allow = true;
+                    }
+                    if ($allow === false) {
+                        return NODE_ACCESS_DENY;
+                    }
+                    break;
+            }
+            break;
+    
+        case 'upload':
+            switch ($op) {
+                case 'create':
+                    if (custom_is_user_upload_reached_limit($account)) {
+                        // Ini berlaku untuk form build dan form submit.
+                        return NODE_ACCESS_DENY;
+                    }
+                    break;
+                case 'view':
+                    $allow = false;
+                    if (isset($account->uid) && isset($node->uid) && $account->uid == $node->uid) {
+                        $allow = true;
+                    }
+                    if (user_has_role(CUSTOM_ROLE_ADMIN, $account)) {
+                        $allow = true;
+                    }
+                    if ($allow === false) {
+                        return NODE_ACCESS_DENY;
+                    }
+                    break;
+            }
+            break;
+    
+        default:
+            // Do something.
+            break;
+    }
+    
+}
+
+function custom_validate_registration_limit($form, &$form_state) {
+    // if (custom_is_user_registration_reached_limit()) {
+        // form_set_error('title', 'Anda sudah pernah mendaftar sebelumnya.');
+    // }
+}
+
+function custom_preprocess_upload_node_form(&$vars) {
+    $vars['form_render'] = drupal_render_children($vars['form']);
+    $dir = variable_get('file_public_path') . '/registration';
+    $files = array_diff(scandir($dir), ['.','..']);
+    foreach ($files as $key => $value) {
+        $vars['links'][] = l(pathinfo($value, PATHINFO_FILENAME), $dir. '/' . $value);
+    }
+    $block = block_load('jquery_countdown_timer', 'jquery_countdown_timer');
+    $vars['jquery_countdown_timer'] = _block_get_renderable_array(_block_render_blocks(array($block)));
+}
+
+function custom_preprocess_registration_node_form(&$vars) {
+    
+    // $vars['form_render'] = drupal_render_children($vars['form']);
+    // $dir = variable_get('file_public_path') . '/registration';
+    // $files = array_diff(scandir($dir), ['.','..']);
+    // foreach ($files as $key => $value) {
+        // $vars['links'][] = l(pathinfo($value, PATHINFO_FILENAME), $dir. '/' . $value);
+    // }
+    $block = block_load('jquery_countdown_timer', 'jquery_countdown_timer');
+    $vars['jquery_countdown_timer'] = _block_get_renderable_array(_block_render_blocks(array($block)));
+    hide($vars['form']['field_verify']);
+    $vars['allow_edit_field_verify'] = isset($vars['form']['field_verify']['#access']) ? $vars['form']['field_verify']['#access'] : true;
+}
+
+function custom_form_upload_alter(&$form, &$form_state, $form_id) {
+    // if (isset($form['#theme'])) {
+        // $a = isset($form['#theme']);
+    // }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function custom_views_api() {
+    return array(
+        'api' => 3,
+        'path' =>  drupal_get_path('module', 'custom') . '/views',
+    );
+}
+
+/**
+ * Implements hook_views_default_views().
+ */
+function custom_views_default_views() {
+    $views = array();
+    $modulename = 'custom';
+    // Find views in this directory, and the 'views' subdirectory.
+    $dir = drupal_get_path('module', $modulename);
+    $regex = '/\.view\.inc$/';
+    $files = array();
+    $files += file_scan_directory($dir . '/views/default/', $regex, array('recurse' => FALSE));
+    foreach ($files as $filepath => $file) {
+        require $filepath;
+        if (isset($view)) {
+            $views[$view->name] = $view;
+        }
+    }
+    return $views;
+}
+
+function custom_email_confirm($op, $uid, $old_mail, $new_mail) {
+    if ($op == 'email confirmation') {
+        $user = user_load($uid);
+        $user->name = $new_mail;
+        user_save($user);
+        
+    }
+}
+
+// FORM ALTER.
+
+function custom_form_alter($form, $form_state, $form_id) {
+}
+
+function custom_form_user_profile_form_alter(&$form, &$form_state) {
+    
+    // $path = drupal_get_path('module', 'custom');
+    // drupal_add_css($path. '/css/custom.css', [
+        // 'group' => CSS_THEME,
+    // ]);
+    $register_from_ldap = isset($form['#user']->data['ldap_user']);
+    if (!$register_from_ldap) {
+        array_unshift($form['#validate'], 'custom_validate_email_non_ui');
+    }
+    $validate = $form['#validate'];
+}
+
+function custom_form_registration_node_form_alter(&$form, &$form_state) {
+    // return;
+    global $user;
+    
+    if (isset($form['field_upload'])) {
+        if (!user_access('edit any registration content')) {
+            $form['field_upload']['#access'] = false;
+        }
+    }
+    
+    if (isset($form['field_verify'])) {
+        if (!user_access('edit any registration content')) {
+            $form['field_verify']['#access'] = false;
+        }
+    }
+    
+    
+    $uid = $user->uid;
+    $op = 'edit';
+    if (isset($form_state['node']) && empty($form_state['node']->nid)) {
+        $op = 'create';
+    }
+    switch ($op) {
+        case 'edit':
+            
+            break;
+    
+        case 'create':
+            
+            break;
+    
+        default:
+            // Do something.
+            break;
+    }
+}
+
+function custom_form_user_login_alter(&$form, &$form_state, $form_id) {
+    if (isset($_GET['have_sso'])) {
+        drupal_set_message('You don\'t have to create new account, login with your SSO UI account.');
+        drupal_goto('user'); 
+    }
+}
+
+function custom_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+    // $path = drupal_get_path('module', 'custom');
+    // drupal_add_css($path. '/css/custom.css', [
+        // 'group' => CSS_THEME,
+    // ]);
+    if (current_path() != 'user/register') {
+        return;
+    }
+    
+    $form['have_sso'] = [
+        '#title' => 'Do you have account Single Sign On (SSO) Universitas Indonesia?',
+        '#weight' => -100,
+        '#type' => 'radios',
+        '#options' => ['yes' => 'Yes', 'no' => 'No'],       
+    ];
+    $form['account']['name']['#access'] = false;
+    $form['account']['mail']['#access'] = false;
+    $form['account']['mail']['#element_validate'][] = 'custom_validate_email_non_ui';
+    $form['account']['name']['#element_validate'][] = 'custom_validate_name_from_email';
+    $form['actions']['submit']['#access'] = false;
+    $form['actions']['next'] = [
+        '#type' => 'submit',
+        '#value' => t('Next'),
+    ];
+    array_unshift($form['#validate'], 'custom_validate_redirect');
+    $key = array_search('user_register_validate', $form['#validate']);
+    unset($form['#validate'][$key]);
+    $key = array_search('user_account_form_validate', $form['#validate']);
+    unset($form['#validate'][$key]);
+    $key = array_search('ldap_user_grab_password_validate', $form['#submit']);
+    unset($form['#submit'][$key]);
+    $key = array_search('user_register_submit', $form['#submit']);
+    unset($form['#submit'][$key]);
+    if (isset($form_state['values']['have_sso'])) {
+        switch ($form_state['values']['have_sso']) {
+            case 'no':
+                $form['#validate'][] = 'user_register_validate';
+                $form['#validate'][] = 'user_account_form_validate';
+                $form['#submit'][] = 'ldap_user_grab_password_validate';
+                $form['#submit'][] = 'user_register_submit';
+                $form['account']['name']['#access'] = true;
+                $form['account']['mail']['#access'] = true;
+                $form['actions']['submit']['#access'] = true;
+                $form['actions']['next']['#access'] = false;
+                $form['have_sso']['#access'] = false;
+                break;
+        }
+    }
+    
+}
+
+// NODE FORM ALTER.
+
+// FORM VALIDATE.
+
+function custom_validate_email_non_ui($form, &$form_state) {
+    $values = $form_state['values'];
+    if (isset($values['mail'])) {
+        $mail = trim($values['mail']);
+        if (preg_match('/@ui.ac.id$/', $mail)) {
+            form_set_error('mail', t('Email address from Universitas Indonesia cannot use in this form.'));
+        }
+    }
+    
+}
+
+function custom_validate_name_from_email($element, &$form_state) {
+    $values = $form_state['values'];
+    if (isset($values['name'])) {
+        $name = trim($values['name']);
+        $mail = trim($values['mail']);
+        $form_state['values']['name'] = $mail;
+    }
+}
+
+function custom_validate_redirect($form, &$form_state) {
+    if (isset($form_state['values']['have_sso'])) {
+        switch ($form_state['values']['have_sso']) {
+            case 'no':
+                $form_state['rebuild'] = true;
+                break;
+        
+            case 'yes':
+                drupal_goto('user', ['query' => ['have_sso' => 1]]);    
+                break;
+        }
+    }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function custom_block_info() {
+    return [
+        'button_registration' => [
+            'info' => t('Button Registration'),
+             // Cached elsewhere.
+            // 'cache' => DRUPAL_NO_CACHE,
+            // Auto-enable in 'content' region by default, which always exists.
+            // @see system_themes_page(), drupal_render_page()
+            'status' => 1,
+            'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+            'region' => 'sidebar',
+            'weight' => -10,
+        ],
+    ];
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * Generate a block with a promotional link to Drupal.org and
+ * all system menu blocks.
+ */
+function custom_block_view($delta = '') {
+    switch ($delta) {
+        case 'button_registration':
+            if (user_is_logged_in()) {
+                $block['subject'] = NULL;
+                $block['content'] = theme('button_registration');
+                return $block;
+            }
+            break;
+    }
+}
+
+
+function custom_field_is_required($content_type) {
+    switch ($content_type) {
+        case 'registration':
+            return [
+                // 'field_prefix_title',
+                // 'field_suffix_title',
+                'field_place_of_birth',
+                'field_date_of_birth',
+                'field_home_address',
+                'field_current_work_and_position',
+                'field_office_address',
+                'field_phone_number',
+                'field_email',
+            ];
+    
+        case 'upload':
+            return [
+                'field_upload_file_ktp_paspor',
+                'field_upload_surat_sehat_jasmani',
+                'field_upload_ijazah_s3',
+                'field_upload_file_cv',
+                'field_upload_npwp_dan_spt_terakh',
+                'field_upload_makalah',
+                'field_upload_file_form_1',
+                'field_upload_file_form_2',
+                'field_upload_file_form_3',
+                'field_upload_file_form_4',
+                'field_upload_file_form_5',
+            ];
+    }
+}
+
+function _custom_field_is_required($node, $fields) {
+    
+    
+    
+}
+
+// return labels;
+function nganu($nid) {
+    $labels =[];
+    if (empty($nid)) {
+        return $labels;
+    }
+    $node = node_load($nid);
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    $info = $node_wrapper->getPropertyInfo();
+    $bundle = $node_wrapper->getBundle();
+    
+    foreach (custom_field_is_required($node_wrapper->getBundle()) as $field) {
+        if (isset($info[$field])) {
+            $value = $node_wrapper->$field->value();
+            if (null === $value || [] === $value) {
+                $labels[] = $info[$field]['label'];
+            }
+        }
+    }
+    return $labels;
+    
+}
+
+/**
+ * Implements of hook_node_update().
+ */
+function custom_node_insert($node) {
+    // $debugname = 'node'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    
+    if ($node->type == 'upload') {
+        $registration_nid = custom_get_nid_user_registration(user_load($node->uid));
+        $wrapper = entity_metadata_wrapper('node', $registration_nid);
+        $wrapper->field_upload = $node->nid;
+        $wrapper->save();
+    }
+    // $debugname = 'node'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    
+}
+
+/**
+ * Implements of hook_node_update().
+ */
+function custom_node_update($node) {
+    
+    if ($node->type == 'upload') {
+        $registration_nid = custom_get_nid_user_registration(user_load($node->uid));
+        $wrapper = entity_metadata_wrapper('node', $registration_nid);
+        $wrapper->field_upload = $node->nid;
+        $wrapper->save();
+        
+        
+        // $debugname = 'registration_nid'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+        
+    }
+    elseif ($node->type == 'registration') {
+        
+    }
+    // $debugname = 'node'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    
+}
+
+  
+/**
+ * Implements of hook_user_login().
+ */
+function custom_user_login(&$edit, $account) {
+    return;
+    $ldapconn = ldap_connect(UI_LDAP_HOST);
+    if(!$ldapconn){
+		// PR: beri info watchdog jika connect ke ldap gagal
+		return FALSE;
+	}
+    $username = $account->name;
+    switch ($username) {
+        case 'admin':
+        case 'muhammad.roji':
+            return;
+    }
+    $filter="uid=$username";
+	$sr=ldap_search($ldapconn, UI_LDAP_BASEDN, $filter);
+	$info = ldap_get_entries($ldapconn, $sr);
+	$count = $info['count'];
+    if (empty($count)) {
+        return;
+    }
+    $is_mahasiswa = false;
+    if (isset($info[0]['homedirectory']['0'])) {
+        if (preg_match('/mahasiswa/', $info[0]['homedirectory']['0']) === 1) {
+            $is_mahasiswa = true;
+        };
+    }
+    elseif (isset($info[0]['role']['0']) && strtolower($info[0]['role']['0']) == 'mahasiswa') {
+        $is_mahasiswa = true;
+    }
+    if ($is_mahasiswa) {
+        module_invoke_all('user_logout', $account);
+        session_destroy();
+        drupal_set_message('Mahasiswa dilarang masuk.', 'error');
+        drupal_goto('login');
+    }
+}
+
+function custom_form_workflow_transition_form_alter(&$form, &$form_state) {
+    if (isset($form['workflow']['workflow_comment'])) {
+        $form['workflow']['workflow_comment']['#required'] = true;
+    }
+}
+
+
+function custom_node_submit(&$node, $form, $form_state) {
+    if (isset($node->type) && $node->type == 'registration' && isset($node->field_verify[LANGUAGE_NONE][0]['value'])) {
+        $user = user_load($node->uid);
+        $field_verify = $node->field_verify[LANGUAGE_NONE][0]['value'];
+        switch ($field_verify) {
+            case 'Tidak lolos terjaring':
+                return custom_revoke_calon_rektor($user);
+        
+            case 'Lolos terjaring':
+                return custom_invoke_calon_rektor($user);
+        }
+    }
+    // $debugname = 'node'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    
+}
+
+function custom_revoke_calon_rektor($user) {
+    if (isset($user->roles[205018773])) {
+        unset($user->roles[205018773]);
+        user_save($user);
+    }
+}
+
+function custom_invoke_calon_rektor($user) {
+    if (!isset($user->roles[205018773])) {
+        $user->roles[205018773] = 'Bakal Calon Rektor Terjaring';
+        user_save($user);
+    }
+    
+}
+
+/**
+ * Implements of hook_workflow().
+ */
+function custom_workflow($op, $id, $new_sid, $entity, $force, $entity_type = '', $field_name = '', $transition = NULL, $user = NULL) {
+    // $debugname = 'op'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'id'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'new_sid'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'entity'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'force'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'entity_type'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'field_name'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'transition'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'user'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    switch ($op) {
+        case 'transition pre':
+            if (_custom_workflow_is_registration($entity)) {
+                if (in_array($new_sid, [7,8])) { 
+                    $author = user_load($entity->uid);
+                    switch ($new_sid) {
+                        case 7: // Lolos Terjaring
+                            custom_invoke_calon_rektor($author);
+                            custom_sync_registration_to_profile($entity, $author);
+                            break;
+                    
+                        case 8: // Tidak Lolos Terjaring
+                            custom_revoke_calon_rektor($user);
+                            break;
+                    }
+                    
+                }
+            }
+            break;
+    
+        case '':
+            // Do something.
+            break;
+    
+        default:
+            // Do something.
+            break;
+    }
+}
+
+function custom_sync_registration_to_profile($node, $user) {
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    $user_wrapper = entity_metadata_wrapper('user', $user);
+    $node_info = $node_wrapper->getPropertyInfo();
+    $node_fields = array_keys($node_wrapper->getPropertyInfo());
+    $user_fields = array_keys($user_wrapper->getPropertyInfo());
+    $fields = array_intersect($user_fields, $node_fields);
+    $fields = array_filter($fields, function ($value) {
+        return preg_match('/^field_/', $value);
+    });
+    
+    foreach ($fields as $field) {
+        $user_wrapper->$field->set($node_wrapper->$field->value());
+    }
+    $user_wrapper->save();
+}
+
+function _custom_workflow_is_registration($node) {
+    return (isset($node->type) && $node->type == 'registration');
+}
+
+function custom_tempebacem() {
+    
+    
+    
+}
