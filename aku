@@ -4,7 +4,7 @@ define('UI_LDAP_HOST','152.118.39.37');
 define('UI_LDAP_BASEDN','o=Universitas Indonesia, c=ID');
 define('UI_SERVICES_URL','https://services.ui.ac.id/ws/middleware/'); // with trailing slash
 
-    
+     
 define('CUSTOM_LIMIT_REGISTRATION', 1);
 define('CUSTOM_LIMIT_UPLOAD', 1);
 define('CUSTOM_STATE_UNCOMPLETE', 2);
@@ -94,7 +94,7 @@ function custom_menu() {
         ],
         '20besar' => [
             'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
-            'title' => '21 Bakal Calon Rektor Terjaring Universitas Indonesia',
+            'title' => '20 Besar Bakal Calon Rektor Universitas Indonesia',
             'access callback' => true,
             'page callback' => 'custom_20besar',
             'options' => [
@@ -133,8 +133,21 @@ function custom_theme() {
             'template' => 'templates/button-registration',
             'file' => 'custom.theme.inc',
         ],
+        'profile_candidate' => [
+            'render element' => 'element',
+            'template' => 'templates/profile-candidate',
+            'file' => 'custom.theme.inc',
+        ],
     ];
 }
+
+/**
+ * hook_user_view_alter
+ */
+function custom_user_view_alter(&$build) {
+    _custom_user_view_profile_candidate_alter($build);
+}
+
 
 function custom_js_get_anu() {
     return <<<'EOL'
@@ -199,6 +212,24 @@ function custom_menu_alter(&$items) {
     $items['user']['options'] = [
         'sbadmin2_icon' => 'user-o',
     ];
+    // $items['user/%user']
+    if (isset($items['user/%user'])) {
+        $items['user/%user']['access callback'] = 'custom_user_view_access';
+    }
+}
+
+function custom_user_view_access($account) {
+    $uid = is_object($account) ? $account->uid : (int) $account;
+    if (!is_object($account)) {
+        $account = user_load($uid);
+    }
+    // Jika user adalah bakal calon rektor, maka semua orang bisa
+    // melihat profile dia.
+    if (isset($account->roles[205018773])) {
+        return true;
+    }
+    // Bring back to default.
+    return user_view_access($account);
 }
 
 /**
@@ -972,8 +1003,157 @@ function _custom_workflow_is_registration($node) {
     return (isset($node->type) && $node->type == 'registration');
 }
 
-function custom_tempebacem() {
+
+function custom_preprocess_page(&$variables) {
+    _custom_preprocess_page_profile_candidate($variables);
     
     
+}
+
+/**
+ * Mengubah title menjadi Nama dan gelar.
+ */
+function _custom_preprocess_page_profile_candidate(&$variables) {
+    // drupal_set_title('Permintaan Faktur Pajak');
+    // $debugname = 'variables'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    
+    // Lihat pada template_process_page()
+    // 
+    // $variables['title'] = 'roji';
+    // Region tergantung pada theme, oleh karena itu kita perlu cari tahu
+    // dimana region yang mengandung block dengan delta: `system_main`.
+    $found = false;
+    foreach (element_children($variables['page']) as $region) {
+        if (isset($variables['page'][$region]['system_main'])) {
+            $found = $region;
+            break;
+        }
+    }
+    if ($found === false) {
+        return;
+    }
+    // 
+    $content = &$variables['page'][$region]['system_main'];
+    if ((isset($content['#theme']) && $content['#theme'] == 'profile_candidate') === false) {
+        return;
+    }
+    // Property #page_title dari build array content berasal dari function
+    // custom_user_view_alter().
+    if (isset($content['#page_title'])) {
+        $variables['title'] = $content['#page_title'];
+    }
+    
+    // $debugname = 'content'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    
+    // $debugname = 'variables'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    
+}
+
+function _custom_user_view_profile_candidate_alter(&$build) {
+    $eligible = false;
+    $account = $build['#account'];
+    if (isset($account->roles[205018773])) {
+        $eligible = true;
+    }
+    if ($eligible === false) {
+        return;
+    }
+    // Ganti theme dari default.
+    $build['#theme'] = 'profile_candidate';
+    // Kasih pancingan title untuk nanti diproses oleh hook_preprocess_page.
+    $user_wrapper = entity_metadata_wrapper('user', $account);
+    $user_info = $user_wrapper->getPropertyInfo();
+    $prefix_title = isset($user_info['field_prefix_title']) ? $user_wrapper->field_prefix_title->value() : '';
+    $suffix_title = isset($user_info['field_suffix_title']) ? $user_wrapper->field_suffix_title->value() : '';
+    $name = isset($user_info['field_name']) ? $user_wrapper->field_name->value() : '';
+    $name_title = $name;
+    if(!empty($prefix_title)) $name_title = $prefix_title . ' ' . $name_title;
+    if(!empty($suffix_title)) $name_title = $name_title . ', ' . $suffix_title;
+    $build['#page_title'] = $name_title;
+    // $build['#attached']['library'][] = ['videojs', 'video-js'];
+    // Ganti field_video_blog dengan versi hack-an, karena ada masalah dengan
+    // bawaan Drupal.
+        // $field_video_blog = $build['field_video_blog'];
+        // unset($field_video_blog['#object']);
+        // $debugname = 'field_video_blog'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+
+
+    if (isset($build['field_video_blog'])) {
+        foreach ($build['field_video_blog']['#items'] as $key => $object) {
+            $build['field_video_blog'][$key] = custom_build_videojs($object);
+        }
+    }
+    $fields_denied = [
+        'user_picture',
+        'field_date_of_birth',
+        'field_email',
+        'field_home_address',
+        'field_name',
+        'field_office_address',
+        'field_phone_number',
+        'field_place_of_birth',
+        'field_prefix_title',
+        'field_suffix_title',
+        'field_surat_kesehatan_dan_kejiwa',
+        'field_current_work_and_position',
+        'summary',
+        '__',
+        '__',
+    ];
+    if (!user_access('administer users')) {
+        
+        foreach ($fields_denied as $field) {
+            if (isset($build[$field])) {
+                $build[$field]['#access'] = false;
+            }
+        }
+    }
+    
+
+    
+    
+}
+
+/**
+ * $object = array hasil file_load().
+ */
+function custom_build_videojs($object) {
+    $build = [
+        '#prefix' => '<div class="wrapper"><div class="videocontent">',
+        '#suffix' => '</div></div>',
+        '#theme' => 'videojs',
+        '#items' => [],
+        '#player_id' => drupal_html_id('videojs'),
+        '#attributes' => [
+            'width' => 640,
+            'height' => 360,
+            'loop' => FALSE,
+            'autoplay' => TRUE,
+            'preload' => 'none',
+            'hidecontrols' => FALSE,
+            'class' => ['vjs-16-9'], // todo, lihat ratio dari gambar
+            // ref: https://coolestguidesontheplanet.com/videodrome/videojs/
+        ],
+        
+    ];
+    $build['#items'][] = [
+        'uri' => $object['uri'],
+        'filemime' => $object['filemime'],
+    ];
+    if (isset($object->thumbnailfile)) {
+        $build['#items'][] = [
+            'uri' => $object['thumbnailfile']->uri,
+            'filemime' => $object['thumbnailfile']->filemime,
+        ];
+    }
+    return $build;    
+}
+
+function custom_preprocess_videojs(&$variables) {
+    // $variables['classes_array'][] = 'roji';
+    // $variables['class'] = 'roji ';
+    // $variables['classes'] = 'roji ';
+    // $debugname = 'variables'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
+    // $debugname = 'variables'; $debugfile = 'debug.html'; $debugvariable = '|||wakwaw|||'; if (array_key_exists($debugname, get_defined_vars())) { $debugvariable = $$debugname; } elseif (isset($this) && property_exists($this, $debugname)) { $debugvariable = $this->{$debugname}; $debugname = '$this->' . $debugname; } if ($debugvariable !== '|||wakwaw|||') { ob_start(); echo "\r\n<pre>" . basename(__FILE__ ). ":" . __LINE__ . " (Time: " . date('c') . ", Direktori: " . dirname(__FILE__) . ")\r\n". 'var_dump(' . $debugname . '): '; var_dump($debugvariable); echo "</pre>\r\n"; $debugoutput = ob_get_contents();ob_end_clean(); file_put_contents($debugfile, $debugoutput, FILE_APPEND); }
     
 }
